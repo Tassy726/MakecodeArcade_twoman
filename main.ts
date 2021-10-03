@@ -1,3 +1,42 @@
+controller.player2.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Pressed, function () {
+    shot = sprites.createProjectileFromSprite(img`
+        . . . . . . . . 
+        . . . . . . . . 
+        . . . 8 8 . . . 
+        . . 8 1 6 8 . . 
+        . . 8 6 6 8 . . 
+        . . . 8 8 . . . 
+        . . . . . . . . 
+        . . . . . . . . 
+        `, player2, -100, 0)
+    shot.x = player2.left
+})
+controller.player2.onButtonEvent(ControllerButton.Up, ControllerButtonEvent.Pressed, function () {
+    if (player2.y == 68) {
+        player2.vy = -150
+    }
+})
+controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (player1.y == 68) {
+        player1.vy = -150
+    }
+})
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    shot = sprites.createProjectileFromSprite(img`
+        . . . . . . . . 
+        . . . . . . . . 
+        . . . 2 2 . . . 
+        . . 2 1 4 2 . . 
+        . . 2 4 4 2 . . 
+        . . . 2 2 . . . 
+        . . . . . . . . 
+        . . . . . . . . 
+        `, player1, 100, 0)
+    shot.x = player1.right
+})
+let shot: Sprite = null
+let player2: Sprite = null
+let player1: Sprite = null
 scene.setBackgroundImage(img`
     999999999999999999999999999999f99f99feef999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
     999999999999999999999999999999ffff99feef999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
@@ -120,7 +159,7 @@ scene.setBackgroundImage(img`
     efefeffeeeeeeeeeefefeffebbbbbbbbbbeeefffbbbbbbbbbbfffffbfffffbbbbbfffffbfffffbbbbbfffffcc1fccccf111bbbbbbbbbbbbbeeeeeeeeefefeffe88968896889688968896889688968896
     eeefefeeeeeeeeeeeeefefeebbbbbbbbbbbbeeefbbbbbbbbbbbfffbbbfffbbbbbbbfffbbbfffbbbbbbbfffcccc1ffff1bbbbbbbbbbbbbbbbeeeeeeeeeeefefee69696969696969696969696969696969
     `)
-let player1 = sprites.create(img`
+player1 = sprites.create(img`
     ....ffffffff................
     ...feeeeeeeff...............
     ...feeeeeeeef...............
@@ -138,7 +177,7 @@ let player1 = sprites.create(img`
     .ffffcffffccff..............
     ....fff..ffff...............
     `, SpriteKind.Player)
-let player2 = sprites.create(img`
+player2 = sprites.create(img`
     ................ffffffff....
     ...............ff5555555f...
     ...............f55555555f...
@@ -160,6 +199,8 @@ player1.setPosition(20, 20)
 player2.setPosition(140, 20)
 player1.ay = 300
 player2.ay = 300
+controller.moveSprite(player1, 100, 0)
+controller.player2.moveSprite(player2, 100, 0)
 game.onUpdate(function () {
     if (player1.y >= 68) {
         player1.y = 68
