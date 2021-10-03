@@ -1,3 +1,7 @@
+namespace SpriteKind {
+    export const shot1 = SpriteKind.create()
+    export const shot2 = SpriteKind.create()
+}
 controller.player2.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Pressed, function () {
     shot = sprites.createProjectileFromSprite(img`
         . . . . . . . . 
@@ -10,11 +14,20 @@ controller.player2.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Press
         . . . . . . . . 
         `, player2, -100, 0)
     shot.x = player2.left
+    shot.setKind(SpriteKind.shot2)
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.shot1, function (sprite, otherSprite) {
+    otherSprite.destroy(effects.fire, 100)
+    info.player2.changeLifeBy(-1)
 })
 controller.player2.onButtonEvent(ControllerButton.Up, ControllerButtonEvent.Pressed, function () {
     if (player2.y == 68) {
         player2.vy = -150
     }
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.shot2, function (sprite, otherSprite) {
+    otherSprite.destroy(effects.fire, 100)
+    info.changeLifeBy(-1)
 })
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     if (player1.y == 68) {
@@ -33,6 +46,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         . . . . . . . . 
         `, player1, 100, 0)
     shot.x = player1.right
+    shot.setKind(SpriteKind.shot1)
 })
 let shot: Sprite = null
 let player2: Sprite = null
@@ -201,6 +215,8 @@ player1.ay = 300
 player2.ay = 300
 controller.moveSprite(player1, 100, 0)
 controller.player2.moveSprite(player2, 100, 0)
+info.setLife(3)
+info.player2.setLife(3)
 game.onUpdate(function () {
     if (player1.y >= 68) {
         player1.y = 68
