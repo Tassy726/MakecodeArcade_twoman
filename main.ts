@@ -17,12 +17,13 @@ controller.player2.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Press
         shot.x = player2.left
         shot.setKind(SpriteKind.shot2)
         ammo2 += 1
-        music.playTone(262, music.beat(BeatFraction.Half))
+        music.pewPew.play()
     }
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.shot1, function (sprite, otherSprite) {
     otherSprite.destroy(effects.fire, 100)
     info.player2.changeLifeBy(-1)
+    music.smallCrash.play()
 })
 controller.player2.onButtonEvent(ControllerButton.Up, ControllerButtonEvent.Pressed, function () {
     if (player2.y == 68) {
@@ -32,6 +33,7 @@ controller.player2.onButtonEvent(ControllerButton.Up, ControllerButtonEvent.Pres
 sprites.onOverlap(SpriteKind.Player, SpriteKind.shot2, function (sprite, otherSprite) {
     otherSprite.destroy(effects.fire, 100)
     info.changeLifeBy(-1)
+    music.smallCrash.play()
 })
 info.onLifeZero(function () {
     game.setDialogFrame(img`
@@ -184,7 +186,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         shot.x = player1.right
         shot.setKind(SpriteKind.shot1)
         ammo1 += 1
-        music.playTone(262, music.beat(BeatFraction.Half))
+        music.pewPew.play()
     }
 })
 let shot: Sprite = null
