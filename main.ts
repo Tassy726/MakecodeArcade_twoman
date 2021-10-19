@@ -3,18 +3,22 @@ namespace SpriteKind {
     export const shot2 = SpriteKind.create()
 }
 controller.player2.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Pressed, function () {
-    shot = sprites.createProjectileFromSprite(img`
-        . . . . . . . . 
-        . . . . . . . . 
-        . . . 8 8 . . . 
-        . . 8 1 6 8 . . 
-        . . 8 6 6 8 . . 
-        . . . 8 8 . . . 
-        . . . . . . . . 
-        . . . . . . . . 
-        `, player2, -100, 0)
-    shot.x = player2.left
-    shot.setKind(SpriteKind.shot2)
+    if (ammo2 < 3) {
+        shot = sprites.createProjectileFromSprite(img`
+            . . . . . . . . 
+            . . . . . . . . 
+            . . . 8 8 . . . 
+            . . 8 1 6 8 . . 
+            . . 8 6 6 8 . . 
+            . . . 8 8 . . . 
+            . . . . . . . . 
+            . . . . . . . . 
+            `, player2, -100, 0)
+        shot.x = player2.left
+        shot.setKind(SpriteKind.shot2)
+        ammo2 += 1
+        music.playTone(262, music.beat(BeatFraction.Half))
+    }
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.shot1, function (sprite, otherSprite) {
     otherSprite.destroy(effects.fire, 100)
@@ -29,26 +33,163 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.shot2, function (sprite, otherSp
     otherSprite.destroy(effects.fire, 100)
     info.changeLifeBy(-1)
 })
+info.onLifeZero(function () {
+    game.setDialogFrame(img`
+        ...cc..............................cc.....
+        ..c55c..bbbb...bbbbb...bbbbb......c55c....
+        .cb55bcbdddbbbbbdddbbbbbdddbbbbbbcb55bc...
+        b555555bbdddb111bdddb111bdddb11db555555b..
+        bb5555bbbbdb11111bdb11111bdb1111bb5555bb..
+        cb5555bcddd11111ddd11111ddd11111cb5555bc..
+        .c5bb5c1111d111d111d111d111d111ddc5bb5c...
+        .cbbbbc11111111111111111111111111cbbbbc...
+        ..b1111111111111111111111111111111dddbb...
+        ..b11111111111111111111111111111111dbbdb..
+        ..bb1111111111111111111111111111111dbddb..
+        .bbdb1d1111111111111111111111111111ddddb..
+        .bdddd1111111111111111111111111111d1bdbb..
+        .bddbd1111111111111111111111111111111bb...
+        .bdb1d11111111111111111111111111111111b...
+        .bb111d1111111111111111111111111111111b...
+        ..b1111111111111111111111111111111d111bb..
+        ..b11111111111111111111111111111111d1bdb..
+        ..bb1111111111111111111111111111111dbddb..
+        .bbdb1d1111111111111111111111111111ddddb..
+        .bdddd1111111111111111111111111111d1bdbb..
+        .bddbd1111111111111111111111111111111bb...
+        .bdb1d11111111111111111111111111111111b...
+        .bb111d1111111111111111111111111111111b...
+        ..b1111111111111111111111111111111d111bb..
+        ..b11111111111111111111111111111111d1bdb..
+        ..bb1111111111111111111111111111111dbddb..
+        .bbdb1d1111111111111111111111111111ddddb..
+        .bdddd1111111111111111111111111111d1bdbb..
+        .bddbd1111111111111111111111111111111bb...
+        .bdbb111111111111111111111111111111111b...
+        .bbbd111111111111111111111111111111111b...
+        ..bcc11111111111111111111111111111dccdb...
+        ..c55c1111111d111d111d111d111d1111c55cb...
+        .cb55bcdd11111ddd11111ddd11111dddcb55bc...
+        b555555bd1111bdb11111bdb11111bdbb555555b..
+        bb5555bbdd11bdddb111bdddb111bdddbb5555bb..
+        cb5555bcbbbbbbdddbbbbbdddbbbbbddcb5555bc..
+        .c5bb5c......bbbbb...bbbbb...bbbbc5bb5c...
+        .cbbbbc..........................cbbbbc...
+        ..........................................
+        ..........................................
+        `)
+    game.setDialogCursor(img`
+        ................ffffffff....
+        ...............ff5555555f...
+        ...............f55555555f...
+        ...............fdddfddd55f..
+        ...............fddddfdd55f..
+        ...............f6dddfff55f..
+        ...............f6dddffffff..
+        ...........f..f55dddfff44f..
+        .fffffffffff..f8555555448f..
+        .fbbbbbbbfeffff8544554488f..
+        .fbbbbbbfeeeeeff85544888f...
+        .ffffffffffeeeff855488888f..
+        .........f.ffff8815118888f..
+        ........f.....f88bbbb88888f.
+        ..............ffeeffffeffff.
+        ...............ffff..fff....
+        `)
+    game.setDialogTextColor(8)
+    game.showLongText("2P WIN!", DialogLayout.Bottom)
+    game.reset()
+})
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     if (player1.y == 68) {
         player1.vy = -150
     }
 })
+sprites.onDestroyed(SpriteKind.shot2, function (sprite) {
+    ammo2 += -1
+})
+info.player2.onLifeZero(function () {
+    game.setDialogFrame(img`
+        ...cc......................cc....
+        ..c55c..bbbb...bbbbb......c55c...
+        .cb55bcbdddbbbbbdddbbbbbbcb55bc..
+        b555555bbdddb111bdddb11db555555b.
+        bb5555bbdbdb11111bdb1111bb5555bb.
+        cb5555bcddd11111ddd11111cb5555bc.
+        .c5bb5c1111d111d111d111ddc5bb5c..
+        .cbbbbc111111111111111111cbbbbc..
+        ..b11111111111111111111111d111bb.
+        ..b111111111111111111111111d1bdb.
+        ..bb11111111111111111111111dbddb.
+        .bbdb1d11111111111111111111ddddb.
+        .bdddd11111111111111111111d1bdbb.
+        .bddbd11111111111111111111111bb..
+        .bdb1d111111111111111111111111b..
+        .bb111d11111111111111111111111b..
+        ..b11111111111111111111111d111bb.
+        ..b111111111111111111111111d1bdb.
+        ..bb11111111111111111111111dbddb.
+        .bbdb1d11111111111111111111ddddb.
+        .bdddd11111111111111111111d1bdbb.
+        .bddbd11111111111111111111111bb..
+        .bdbb1111111111111111111111111b..
+        .bbbd1111111111111111111111111b..
+        ..bcc111111111111111111111dccdb..
+        ..c55c111d111d111d111d1111c55cb..
+        .cb55bcdd11111ddd11111dddcb55bc..
+        b555555b11111bdb11111bdbb555555b.
+        bb5555bbb111bdddb111bdddbb5555bb.
+        cb5555bcdbbbbbdddbbbbbddcb5555bc.
+        .c5bb5c.bb...bbbbb...bbbbc5bb5c..
+        .cbbbbc..................cbbbbc..
+        .................................
+        `)
+    game.setDialogCursor(img`
+        ....ffffffff................
+        ...feeeeeeeff...............
+        ...feeeeeeeef...............
+        ..feebbbfbbbf...............
+        ..feebbfbbbbf...............
+        ..feefffbbbff...............
+        ..ffffffbbbff...............
+        ..feefffbbbfff..f...........
+        ..f2ceeeeeeeff..fffffffffff.
+        ..f22cceccce2ffffefbbbbbbbf.
+        ...f222ceee2ffeeeeefbbbbbbf.
+        ..f22222cee2ffeeeffffffffff.
+        ..f222211c122ffff.f.........
+        .f22222bbbb22f.....f........
+        .ffffcffffccff..............
+        ....fff..ffff...............
+        `)
+    game.setDialogTextColor(2)
+    game.showLongText("1P WIN!", DialogLayout.Bottom)
+    game.reset()
+})
+sprites.onDestroyed(SpriteKind.shot1, function (sprite) {
+    ammo1 += -1
+})
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    shot = sprites.createProjectileFromSprite(img`
-        . . . . . . . . 
-        . . . . . . . . 
-        . . . 2 2 . . . 
-        . . 2 1 4 2 . . 
-        . . 2 4 4 2 . . 
-        . . . 2 2 . . . 
-        . . . . . . . . 
-        . . . . . . . . 
-        `, player1, 100, 0)
-    shot.x = player1.right
-    shot.setKind(SpriteKind.shot1)
+    if (ammo1 < 3) {
+        shot = sprites.createProjectileFromSprite(img`
+            . . . . . . . . 
+            . . . . . . . . 
+            . . . 2 2 . . . 
+            . . 2 1 4 2 . . 
+            . . 2 4 4 2 . . 
+            . . . 2 2 . . . 
+            . . . . . . . . 
+            . . . . . . . . 
+            `, player1, 100, 0)
+        shot.x = player1.right
+        shot.setKind(SpriteKind.shot1)
+        ammo1 += 1
+        music.playTone(262, music.beat(BeatFraction.Half))
+    }
 })
 let shot: Sprite = null
+let ammo2 = 0
+let ammo1 = 0
 let player2: Sprite = null
 let player1: Sprite = null
 scene.setBackgroundImage(img`
@@ -217,6 +358,8 @@ controller.moveSprite(player1, 100, 0)
 controller.player2.moveSprite(player2, 100, 0)
 info.setLife(3)
 info.player2.setLife(3)
+ammo1 = 0
+ammo2 = 0
 game.onUpdate(function () {
     if (player1.y >= 68) {
         player1.y = 68
